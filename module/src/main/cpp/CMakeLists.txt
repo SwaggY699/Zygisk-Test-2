@@ -45,7 +45,7 @@ include_directories(xdl/include)
 
 aux_source_directory(xdl xdl-src)
 
-add_library(${MODULE_NAME} SHARED  ImGui/imgui.cpp ImGui/imgui_draw.cpp ImGui/imgui_demo.cpp ImGui/imgui_widgets.cpp ImGui/imgui_tables.cpp ImGui/backends/imgui_impl_opengl3.cpp ImGui/backends/imgui_impl_android.cpp ${xdl-src} AU/Il2Cpp.cpp main.cpp hook.cpp)
+add_library(${MODULE_NAME} SHARED  ImGui/imgui.cpp ImGui/imgui_draw.cpp ImGui/imgui_demo.cpp ImGui/imgui_widgets.cpp ImGui/imgui_tables.cpp ImGui/backends/imgui_impl_opengl3.cpp ImGui/backends/imgui_impl_android.cpp ${xdl-src} AU/Il2Cpp.cpp Tools/Tools.cpp main.cpp hook.cpp)
 
 
 find_library(log-lib log)
