@@ -55,7 +55,7 @@ int isGame(JNIEnv *env, jstring appDataDir) {
 
 int glHeight, glWidth;
 bool setupimg;
-/*
+
 bool SetCustomResolution = true;
 void (*_SetResolutionn)(...);
 void SetResolutionn(int width, int height, bool fullscreen){
@@ -65,9 +65,6 @@ if(SetCustomResolution){
 }
 _SetResolutionn(width, height, fullscreen);
 }
-*/
-void (*SetResolution)(int width, int height, bool fullscreen);
-SetResolution(glWidth, glHeight, true);
 
 HOOKAF(void, Input, void *thiz, void *ex_ab, void *ex_ac) {
     origInput(thiz, ex_ab, ex_ac);
@@ -126,11 +123,9 @@ void *hack_thread(void *arg) {
     
     Il2CppAttach();
     sleep(1);
-    /*
+    
     _methods["Screen::SetResolution"] = Il2CppGetMethodOffset("UnityEngine.CoreModule.dll", "UnityEngine", "Screen", "SetResolution", 3);
-    DobbyHook((void *) _methods["Screen::SetResolution"], (void *) SetResolutionn, (void **) &_SetResolutionn);
-    */
-    SetResolution = (void (*)(int, int, bool)) (uintptr_t) Il2CppGetMethodOffset("UnityEngine.dll", "UnityEngine", "Screen", "SetResolution", 3);
+    DobbyHook((void *)&_methods["Screen::SetResolution"], (dobby_dummy_func_t)SetResolutionn, (dobby_dummy_func_t *)&_SetResolutionn);
     
     return nullptr;
 }
