@@ -26,7 +26,7 @@ inline std::map < std::string, size_t > _fields;
 #include "AU/Il2Cpp.h"
 
 
-#define GamePackageName "com.mayoninjagames.zombiecubes2"
+#define GamePackageName "com.ngame.allstar.eu"
 
 int isGame(JNIEnv *env, jstring appDataDir) {
     if (!appDataDir)
