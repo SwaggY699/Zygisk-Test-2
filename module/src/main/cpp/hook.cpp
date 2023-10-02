@@ -18,6 +18,7 @@
 #include "imgui_internal.h"
 #include "backends/imgui_impl_opengl3.h"
 #include "backends/imgui_impl_android.h"
+#include <map>
 
 inline std::map < std::string, void*> _methods;
 inline std::map < std::string, size_t > _fields;
