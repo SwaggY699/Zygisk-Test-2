@@ -1,5 +1,5 @@
 #include "Il2Cpp.h"
-#include <xdl/include/xdl.h>
+#include <xdl.h>
 #include <android/log.h>
 #include <jni.h>
 #include <map>
