@@ -2,8 +2,8 @@ ext {
     moduleLibraryName = "ZygiskImGui"
     magiskModuleId = "Zygisk-ImGui"
     moduleName = "MagiskImGui"
-    moduleAuthor = "Noobbb"
-    moduleDescription = "ImGui Zygisk version."
-    moduleVersion = "v1.0.0"
+    moduleAuthor = "Discord : SwaggY7777"
+    moduleDescription = "IL2CPP Module"
+    moduleVersion = "v1.0"
     moduleVersionCode = 1
 }
