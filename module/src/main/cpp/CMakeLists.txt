@@ -41,8 +41,11 @@ set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} ${LINKER_FLAGS}")
 include_directories(Includes)
 include_directories(ImGui)
 include_directories(ImGui/backends)
+include_directories(xdl/include)
 
-add_library(${MODULE_NAME} SHARED  ImGui/imgui.cpp ImGui/imgui_draw.cpp ImGui/imgui_demo.cpp ImGui/imgui_widgets.cpp ImGui/imgui_tables.cpp ImGui/backends/imgui_impl_opengl3.cpp ImGui/backends/imgui_impl_android.cpp  main.cpp hook.cpp)
+aux_source_directory(xdl xdl-src)
+
+add_library(${MODULE_NAME} SHARED  ImGui/imgui.cpp ImGui/imgui_draw.cpp ImGui/imgui_demo.cpp ImGui/imgui_widgets.cpp ImGui/imgui_tables.cpp ImGui/backends/imgui_impl_opengl3.cpp ImGui/backends/imgui_impl_android.cpp ${xdl-src} AU/Il2Cpp.cpp main.cpp hook.cpp)
 
 
 find_library(log-lib log)
