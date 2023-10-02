@@ -126,7 +126,7 @@ void *hack_thread(void *arg) {
     }
     LOGI(OBFUSCATE("Draw Done!"));
     
-    void *il2cppHandle = by_dlopen("libil2cpp.so", RTLD_LAZY);
+    void *il2cppHandle = dlopen("libil2cpp.so", RTLD_LAZY);
     const char *il2cpp_error = dlerror();
     if (il2cpp_error || !il2cppHandle)
     {
