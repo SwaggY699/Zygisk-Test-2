@@ -115,6 +115,16 @@ EGLBoolean hook_eglSwapBuffers(EGLDisplay dpy, EGLSurface surface) {
     return old_eglSwapBuffers(dpy, surface);
 }
 
+void dlopen_process(const char *name, void *handle) {
+    
+    if (!il2cpp_handle) {
+        if (strstr(name, "libil2cpp.so")) {
+            il2cpp_handle = handle;
+        }
+    }
+    
+}
+
 void *hack_thread(void *arg) {
     sleep(5);
     auto eglhandle = dlopen("libunity.so", RTLD_LAZY);
@@ -125,18 +135,17 @@ void *hack_thread(void *arg) {
     DobbyHook(sym_input, (void*)myInput, (void**)&origInput);
     }
     LOGI(OBFUSCATE("Draw Done!"));
-    
-    //void *il2cppHandle = dlopen("libil2cpp.so", RTLD_LAZY);
-    uintptr_t il2cppHandle = reinterpret_cast<uintptr_t>(dlopen("libil2cpp.so", RTLD_LAZY));
+    /*
+    void *il2cppHandle = dlopen("libil2cpp.so", RTLD_LAZY);
     const char *il2cpp_error = dlerror();
     if (il2cpp_error || !il2cppHandle)
     {
         LOGE(OBFUSCATE("Cannot load dl 'il2cpp': %s"), il2cpp_error);
         return NULL;
     }
-    
+    */
     while (!il2cppMap) {
-		il2cppMap = Tools::GetBaseAddress(il2cppHandle);
+		il2cppMap = Tools::GetBaseAddress(il2cpp_handle);
 		sleep(5);
 	}
 	
