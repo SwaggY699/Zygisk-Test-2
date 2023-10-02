@@ -67,7 +67,7 @@ _SetResolutionn(width, height, fullscreen);
 }
 */
 void (*SetResolution)(int width, int height, bool fullscreen);
-SetResolution(screenWidth, screenHeight, true);
+SetResolution(glWidth, glHeight, true);
 
 HOOKAF(void, Input, void *thiz, void *ex_ab, void *ex_ac) {
     origInput(thiz, ex_ab, ex_ac);
