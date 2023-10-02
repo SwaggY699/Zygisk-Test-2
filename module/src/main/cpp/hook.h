@@ -5,6 +5,7 @@
 #include <jni.h>
 
 static int enable_hack;
+static void *il2cpp_handle = NULL;
 static char *game_data_dir = NULL;
 
 int isGame(JNIEnv *env, jstring appDataDir);
