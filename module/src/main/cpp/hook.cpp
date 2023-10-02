@@ -18,7 +18,9 @@
 #include "imgui_internal.h"
 #include "backends/imgui_impl_opengl3.h"
 #include "backends/imgui_impl_android.h"
+
 #include <map>
+#include "Tools/Obfuscate.h"
 #include "Logger.h"
 
 inline std::map < std::string, void*> _methods;
@@ -26,6 +28,7 @@ inline std::map < std::string, size_t > _fields;
 
 uintptr_t il2cppMap;
 
+#include "Tools/Tools.h"
 #include "AU/Il2Cpp.h"
 
 
@@ -40,12 +43,12 @@ int isGame(JNIEnv *env, jstring appDataDir) {
     if (sscanf(app_data_dir, "/data/%*[^/]/%d/%s", &user, package_name) != 2) {
         if (sscanf(app_data_dir, "/data/%*[^/]/%s", package_name) != 1) {
             package_name[0] = '\0';
-            LOGW("can't parse %s", app_data_dir);
+            LOGW(OBFUSCATE("can't parse %s"), app_data_dir);
             return 0;
         }
     }
     if (strcmp(package_name, GamePackageName) == 0) {
-        LOGI("detect game: %s", package_name);
+        LOGI(OBFUSCATE("detect game: %s"), package_name);
         game_data_dir = new char[strlen(app_data_dir) + 1];
         strcpy(game_data_dir, app_data_dir);
         env->ReleaseStringUTFChars(appDataDir, app_data_dir);
@@ -121,9 +124,9 @@ void *hack_thread(void *arg) {
     if (NULL != sym_input) {
     DobbyHook(sym_input, (void*)myInput, (void**)&origInput);
     }
-    LOGI("Draw Done!");
+    LOGI(OBFUSCATE("Draw Done!"));
     
-    void *il2cppHandle = by_dlopen("libil2cpp.so", BY_RTLD_LAZY);
+    void *il2cppHandle = by_dlopen("libil2cpp.so", RTLD_LAZY);
     const char *il2cpp_error = dlerror();
     if (il2cpp_error || !il2cppHandle)
     {
