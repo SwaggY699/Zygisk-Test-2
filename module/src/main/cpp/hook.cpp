@@ -1,4 +1,3 @@
-
 #include "hook.h"
 #include <cstring>
 #include <cstdio>
@@ -20,8 +19,11 @@
 #include "backends/imgui_impl_opengl3.h"
 #include "backends/imgui_impl_android.h"
 
+inline std::map < std::string, void*> _methods;
+inline std::map < std::string, size_t > _fields;
 
-
+#include "AU/Il2Cpp.h"
+#include "xdl.h"
 
 
 #define GamePackageName "com.mayoninjagames.zombiecubes2"
@@ -51,17 +53,18 @@ int isGame(JNIEnv *env, jstring appDataDir) {
     }
 }
 
-
-
-
-
-
 int glHeight, glWidth;
 bool setupimg;
 
-
-
-
+bool SetCustomResolution = true;
+void (*_SetResolutionn)(...);
+void SetResolutionn(int width, int height, bool fullscreen){
+if(SetCustomResolution){
+  width = glWidth;
+ height = glHeight;
+}
+_SetResolutionn(width, height, fullscreen);
+}
 
 HOOKAF(void, Input, void *thiz, void *ex_ab, void *ex_ac) {
     origInput(thiz, ex_ab, ex_ac);
@@ -106,11 +109,6 @@ EGLBoolean hook_eglSwapBuffers(EGLDisplay dpy, EGLSurface surface) {
     return old_eglSwapBuffers(dpy, surface);
 }
 
-
-
-
-
-
 void *hack_thread(void *arg) {
     sleep(5);
     auto eglhandle = dlopen("libunity.so", RTLD_LAZY);
@@ -122,5 +120,12 @@ void *hack_thread(void *arg) {
         DobbyHook(sym_input,(dobby_dummy_func_t)myInput,(dobby_dummy_func_t*)&origInput);
     }
     LOGI("Draw Done!");
+    
+    Il2CppAttach();
+    sleep(1);
+    
+    _methods["Screen::SetResolution"] = Il2CppGetMethodOffset("UnityEngine.CoreModule.dll", "UnityEngine", "Screen", "SetResolution", 3);
+    DobbyHook((void *) _methods["Screen::SetResolution"], (void *) SetResolutionn, (void **) &_SetResolutionn);
+    
     return nullptr;
 }
