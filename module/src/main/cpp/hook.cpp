@@ -19,15 +19,9 @@
 #include "backends/imgui_impl_opengl3.h"
 #include "backends/imgui_impl_android.h"
 #include <map>
-
-inline std::map < std::string, void*> _methods;
-inline std::map < std::string, size_t > _fields;
-
-uintptr_t il2cppMap;
-
-#include "Tools/Tools.h"
-#include "AU/Il2Cpp.h"
-
+#include "xdl/include/xdl.h"
+#include "il2cpp-tabledefs.h"
+#include "il2cpp-class.h"
 
 #define GamePackageName "com.ngame.allstar.eu"
 
@@ -56,9 +50,51 @@ int isGame(JNIEnv *env, jstring appDataDir) {
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////////
+#define INIT_F(x, y)  *(void **)(&x) = (void *)(il2cpp_base + y);
+////////////////////////////////////////////////////////////////////////////////////
+#define DO_API(r, n, p) r (*n) p
+
+#include "il2cpp-api-functions.h"
+
+#undef DO_API
+
+static uint64_t il2cpp_base = 0;
+
+void init_il2cpp_api(void *handle) {
+#define DO_API(r, n, p) {                      \
+    n = (r (*) p)xdl_sym(handle, #n, nullptr); \
+    if(!n) {                                   \
+        //LOGW("api not found %s", #n);          \
+    }                                          \
+}
+
+#include "il2cpp-api-functions.h"
+
+#undef DO_API
+}
+////////////////////////////////////////////////////////////////////////////////////
+void  il2cpp_api_init(void *handle) {
+    //LOGI("il2cpp_handle: %p", handle);
+    init_il2cpp_api(handle);
+    if (il2cpp_domain_get_assemblies) {
+        Dl_info dlInfo;
+        if (dladdr((void *) il2cpp_domain_get_assemblies, &dlInfo)) {
+            il2cpp_base = reinterpret_cast<uint64_t>(dlInfo.dli_fbase);
+        }
+        //LOGI("il2cpp_base: %" PRIx64"", il2cpp_base);
+    } else {
+       // LOGE("Failed to initialize il2cpp api.");
+        return;
+    }
+    auto domain = il2cpp_domain_get();
+    il2cpp_thread_attach(domain);
+}
+////////////////////////////////////////////////////////////////////////////////////
+
 int glHeight, glWidth;
 bool setupimg;
-
+/*
 bool SetCustomResolution = true;
 void (*_SetResolutionn)(...);
 void SetResolutionn(int width, int height, bool fullscreen){
@@ -68,7 +104,7 @@ if(SetCustomResolution){
 }
 _SetResolutionn(width, height, fullscreen);
 }
-
+*/
 HOOKAF(void, Input, void *thiz, void *ex_ab, void *ex_ac) {
     origInput(thiz, ex_ab, ex_ac);
     ImGui_ImplAndroid_HandleInputEvent((AInputEvent *)thiz);
@@ -123,24 +159,16 @@ void *hack_thread(void *arg) {
     }
    // LOGI(OBFUSCATE("Draw Done!"));
     
-    void *il2cppHandle = dlopen("libil2cpp.so", RTLD_LAZY);
-    const char *il2cpp_error = dlerror();
-    if (il2cpp_error || !il2cppHandle)
-    {
-       // LOGE(OBFUSCATE("Cannot load dl 'il2cpp': %s"), il2cpp_error);
-        return NULL;
+    void *handle = xdl_open("libil2cpp.so",0);
+    if (handle) {
+        il2cpp_api_init(handle);
+    }else {
+        //LOGI("libi2cpp not found %d", gettid());
     }
-    /*
-    while (!il2cppMap) {
-		il2cppMap = Tools::GetBaseAddress(il2cpp_handle);
-		sleep(5);
-    }
-    */
-    Il2CppAttach();
-    sleep(1);
     
+    /*
     _methods["Screen::SetResolution"] = Il2CppGetMethodOffset("UnityEngine.CoreModule.dll", "UnityEngine", "Screen", "SetResolution", 3);
     DobbyHook((void *)&_methods["Screen::SetResolution"], (void *)SetResolutionn, (void **)&_SetResolutionn);
-    
+    */
     return nullptr;
 }
