@@ -139,7 +139,8 @@ EGLBoolean hook_eglSwapBuffers(EGLDisplay dpy, EGLSurface surface) {
 
 
 
-    ImGui::ShowDemoWindow();
+    // ImGui::ShowDemoWindow();
+    ImGui::Begin("Discord : SwaggY7777");
 
     ImGui::EndFrame();
     ImGui::Render();
