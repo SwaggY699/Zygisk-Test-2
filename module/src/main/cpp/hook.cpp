@@ -19,9 +19,12 @@
 #include "backends/imgui_impl_opengl3.h"
 #include "backends/imgui_impl_android.h"
 #include <map>
+#include "Logger.h"
 
 inline std::map < std::string, void*> _methods;
 inline std::map < std::string, size_t > _fields;
+
+uintptr_t il2cppMap;
 
 #include "AU/Il2Cpp.h"
 
@@ -113,19 +116,31 @@ void *hack_thread(void *arg) {
     sleep(5);
     auto eglhandle = dlopen("libunity.so", RTLD_LAZY);
     auto eglSwapBuffers = dlsym(eglhandle, "eglSwapBuffers");
-    DobbyHook((void*)eglSwapBuffers,(dobby_dummy_func_t)hook_eglSwapBuffers,
-         (dobby_dummy_func_t*)&old_eglSwapBuffers);
+    DobbyHook((void*)eglSwapBuffers, (void*)hook_eglSwapBuffers, (void**)&old_eglSwapBuffers);
     void *sym_input = DobbySymbolResolver(("/system/lib/libinput.so"), ("_ZN7android13InputConsumer21initializeMotionEventEPNS_11MotionEventEPKNS_12InputMessageE"));
     if (NULL != sym_input) {
-        DobbyHook(sym_input,(dobby_dummy_func_t)myInput,(dobby_dummy_func_t*)&origInput);
+    DobbyHook(sym_input, (void*)myInput, (void**)&origInput);
     }
     LOGI("Draw Done!");
     
+    void *il2cppHandle = by_dlopen("libil2cpp.so", BY_RTLD_LAZY);
+    const char *il2cpp_error = dlerror();
+    if (il2cpp_error || !il2cppHandle)
+    {
+        LOGE(OBFUSCATE("Cannot load dl 'il2cpp': %s"), il2cpp_error);
+        return NULL;
+    }
+    
+    while (!il2cppMap) {
+		il2cppMap = Tools::GetBaseAddress(il2cppHandle);
+		sleep(5);
+	}
+	
     Il2CppAttach();
     sleep(1);
     
     _methods["Screen::SetResolution"] = Il2CppGetMethodOffset("UnityEngine.CoreModule.dll", "UnityEngine", "Screen", "SetResolution", 3);
-    DobbyHook((void *)&_methods["Screen::SetResolution"], (dobby_dummy_func_t)SetResolutionn, (dobby_dummy_func_t *)&_SetResolutionn);
+    DobbyHook((void *)&_methods["Screen::SetResolution"], (void *)SetResolutionn, (void **)&_SetResolutionn);
     
     return nullptr;
 }
