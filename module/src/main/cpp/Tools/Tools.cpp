@@ -9,7 +9,6 @@
 #include <jni.h>
 #include <unistd.h>
 #include <sys/mman.h>
-#include "Obfuscate.h"
 #include "Tools.h"
 
 pid_t target_pid = -1;
@@ -107,7 +106,7 @@ uintptr_t Tools::GetBaseAddress(const char *name) {
     uintptr_t base = 0;
     char line[512];
 
-    FILE *f = fopen(OBFUSCATE("/proc/self/maps"), OBFUSCATE("r"));
+    FILE *f = fopen("/proc/self/maps", "r");
 
     if (!f) {
         return 0;
@@ -130,7 +129,7 @@ uintptr_t Tools::GetEndAddress(const char *name) {
     uintptr_t end = 0;
     char line[512];
 
-    FILE *f = fopen(OBFUSCATE("/proc/self/maps"), OBFUSCATE("r"));
+    FILE *f = fopen("/proc/self/maps", "r");
 
     if (!f) {
         return 0;
