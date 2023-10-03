@@ -152,6 +152,8 @@ EGLBoolean hook_eglSwapBuffers(EGLDisplay dpy, EGLSurface surface) {
 
     ImGui_ImplOpenGL3_NewFrame();
     ImGui::NewFrame();
+
+    static bool norec;
     
     if(norec){
         gPatches.mh1.Modify();
