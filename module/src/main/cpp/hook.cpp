@@ -66,7 +66,7 @@ void init_il2cpp_api(void *handle) {
 #define DO_API(r, n, p) {                      \
     n = (r (*) p)xdl_sym(handle, #n, nullptr); \
     if(!n) {                                   \
-        //LOGW("api not found %s", #n);          \
+    /*LOGW("api not found %s", #n);*/          \
     }                                          \
 }
 
