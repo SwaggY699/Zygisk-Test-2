@@ -22,6 +22,7 @@
 #include "xdl/include/xdl.h"
 #include "il2cpp-tabledefs.h"
 #include "il2cpp-class.h"
+#include "KittyMemory/MemoryPatch.h"
 
 #define GamePackageName "com.ngame.allstar.eu"
 
@@ -65,7 +66,7 @@ void init_il2cpp_api(void *handle) {
 #define DO_API(r, n, p) {                      \
     n = (r (*) p)xdl_sym(handle, #n, nullptr); \
     if(!n) {                                   \
-    /*LOGW("api not found %s", #n);*/          \
+        //LOGW("api not found %s", #n);          \
     }                                          \
 }
 
@@ -82,7 +83,7 @@ void  il2cpp_api_init(void *handle) {
         if (dladdr((void *) il2cpp_domain_get_assemblies, &dlInfo)) {
             il2cpp_base = reinterpret_cast<uint64_t>(dlInfo.dli_fbase);
         }
-        //LOGI("il2cpp_base: %" PRIx64"", il2cpp_base);
+        LOGI("il2cpp_base: %" PRIx64"", il2cpp_base);
     } else {
        // LOGE("Failed to initialize il2cpp api.");
         return;
@@ -91,7 +92,18 @@ void  il2cpp_api_init(void *handle) {
     il2cpp_thread_attach(domain);
 }
 ////////////////////////////////////////////////////////////////////////////////////
+char* nop = "1F2003D5";
+char* fal = "000080D2C0035FD6";
+char* tru = "200080D2C0035FD6";
 
+struct GlobalPatches {
+    MemoryPatch mh1;
+}gPatches;
+////////////////////////////////////////////////////////////////////////////////////
+void Patches(){
+    gPatches.mh1 = MemoryPatch::createWithHex(il2cpp_base + 0x1F7C014, fal);
+}
+////////////////////////////////////////////////////////////////////////////////////
 int glHeight, glWidth;
 bool setupimg;
 /*
@@ -112,6 +124,10 @@ HOOKAF(void, Input, void *thiz, void *ex_ab, void *ex_ac) {
 }
 
 void SetupImgui() {
+    
+    auto Screen_SetResolution = (void (*)(int, int, bool)) (getAbsoluteAddress(il2cpp_base + 0x44A3F00));
+    Screen_SetResolution(glWidth, glHeight, true);
+    
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO &io = ImGui::GetIO();
@@ -136,12 +152,17 @@ EGLBoolean hook_eglSwapBuffers(EGLDisplay dpy, EGLSurface surface) {
 
     ImGui_ImplOpenGL3_NewFrame();
     ImGui::NewFrame();
-
-
-
+    
+    if(norec){
+        gPatches.mh1.Modify();
+    }
+    else{
+        gPatches.mh1.Restore();
+    }
+    
     // ImGui::ShowDemoWindow();
     ImGui::Begin("Discord : SwaggY7777");
-
+    
     ImGui::EndFrame();
     ImGui::Render();
     glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
@@ -166,6 +187,8 @@ void *hack_thread(void *arg) {
     }else {
         //LOGI("libi2cpp not found %d", gettid());
     }
+    
+    Patches();
     
     /*
     _methods["Screen::SetResolution"] = Il2CppGetMethodOffset("UnityEngine.CoreModule.dll", "UnityEngine", "Screen", "SetResolution", 3);
