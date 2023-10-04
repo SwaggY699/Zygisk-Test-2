@@ -24,6 +24,11 @@
 #include "il2cpp-class.h"
 #include "KittyMemory/MemoryPatch.h"
 
+#include "AU/Il2Cpp.h"
+
+inline std::map < std::string, void*> _methods;
+inline std::map < std::string, size_t > _fields;
+
 #define GamePackageName "com.ngame.allstar.eu"
 
 int isGame(JNIEnv *env, jstring appDataDir) {
@@ -92,9 +97,9 @@ void  il2cpp_api_init(void *handle) {
     il2cpp_thread_attach(domain);
 }
 ////////////////////////////////////////////////////////////////////////////////////
-char* nop = "1F2003D5";
-char* fal = "000080D2C0035FD6";
-char* tru = "200080D2C0035FD6";
+const char* nop = "1F2003D5";
+const char* fal = "000080D2C0035FD6";
+const char* tru = "200080D2C0035FD6";
 
 struct GlobalPatches {
     MemoryPatch mh1;
@@ -106,7 +111,7 @@ void Patches(){
 ////////////////////////////////////////////////////////////////////////////////////
 int glHeight, glWidth;
 bool setupimg;
-/*
+
 bool SetCustomResolution = true;
 void (*_SetResolutionn)(...);
 void SetResolutionn(int width, int height, bool fullscreen){
@@ -116,7 +121,7 @@ if(SetCustomResolution){
 }
 _SetResolutionn(width, height, fullscreen);
 }
-*/
+
 HOOKAF(void, Input, void *thiz, void *ex_ab, void *ex_ac) {
     origInput(thiz, ex_ab, ex_ac);
     ImGui_ImplAndroid_HandleInputEvent((AInputEvent *)thiz);
@@ -124,9 +129,6 @@ HOOKAF(void, Input, void *thiz, void *ex_ab, void *ex_ac) {
 }
 
 void SetupImgui() {
-    
-    auto Screen_SetResolution = (void (*)(int, int, bool)) (getAbsoluteAddress(il2cpp_base, 0x44A3F00));
-    Screen_SetResolution(glWidth, glHeight, true);
     
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -190,11 +192,12 @@ void *hack_thread(void *arg) {
         //LOGI("libi2cpp not found %d", gettid());
     }
     
+    Il2CppAttach();
     Patches();
     
-    /*
+    
     _methods["Screen::SetResolution"] = Il2CppGetMethodOffset("UnityEngine.CoreModule.dll", "UnityEngine", "Screen", "SetResolution", 3);
     DobbyHook((void *)&_methods["Screen::SetResolution"], (void *)SetResolutionn, (void **)&_SetResolutionn);
-    */
+    
     return nullptr;
 }
