@@ -95,6 +95,11 @@ void  il2cpp_api_init(void *handle) {
     il2cpp_thread_attach(domain);
 }
 ////////////////////////////////////////////////////////////////////////////////////
+void *Il2CppGetImageByName(const char *image);
+void *Il2CppGetClassType(const char *image, const char *namespaze, const char *clazz);
+void *Il2CppGetMethodOffset(const char *image, const char *namespaze, const char *clazz, const char *name, int argsCount = 0);
+void *Il2CppGetMethodOffset(const char *image, const char *namespaze, const char *clazz, const char *name, char **args, int argsCount);
+////////////////////////////////////////////////////////////////////////////////////
 void *Il2CppGetImageByName(const char *image) {
     size_t size;
     void **assemblies = il2cpp_domain_get_assemblies(il2cpp_domain_get(), &size);
