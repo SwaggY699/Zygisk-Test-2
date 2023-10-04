@@ -32,7 +32,8 @@ DO_API(Il2CppClass*, il2cpp_bounded_array_class_get, (Il2CppClass * element_clas
 DO_API(int, il2cpp_array_element_size, (const Il2CppClass * array_class));
 
 // assembly
-DO_API(const Il2CppImage*, il2cpp_assembly_get_image, (const Il2CppAssembly * assembly));
+//DO_API(const Il2CppImage*, il2cpp_assembly_get_image, (const Il2CppAssembly * assembly));
+DO_API(const void *(*il2cpp_assembly_get_image)(const void *assembly));
 
 // class
 DO_API(void, il2cpp_class_for_each, (void(*klassReportFunc)(Il2CppClass* klass, void* userData), void* userData));
