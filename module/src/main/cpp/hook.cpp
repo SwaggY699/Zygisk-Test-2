@@ -102,9 +102,9 @@ void *Il2CppGetMethodOffset(const char *image, const char *namespaze, const char
 ////////////////////////////////////////////////////////////////////////////////////
 void *Il2CppGetImageByName(const char *image) {
     size_t size;
-    void **assemblies = il2cpp_domain_get_assemblies(il2cpp_domain_get(), &size);
+    const Il2CppAssembly** assemblies = il2cpp_domain_get_assemblies(il2cpp_domain_get(), &size);
     for (int i = 0; i < size; ++i) {
-        void *img = (void *)il2cpp_assembly_get_image(assemblies[i]);
+        const Il2CppImage* img = (void *)il2cpp_assembly_get_image(assemblies[i]);
         const char *img_name = il2cpp_image_get_name(img);
         if (strcmp(img_name, image) == 0) {
             return img;
