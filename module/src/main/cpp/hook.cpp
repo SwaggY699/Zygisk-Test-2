@@ -107,16 +107,6 @@ void Patches(){
 int glHeight, glWidth;
 bool setupimg;
 
-bool SetCustomResolution = true;
-void (*_SetResolutionn)(...);
-void SetResolutionn(int width, int height, bool fullscreen){
-if(SetCustomResolution){
-  width = glWidth;
- height = glHeight;
-}
-_SetResolutionn(width, height, fullscreen);
-}
-
 HOOKAF(void, Input, void *thiz, void *ex_ab, void *ex_ac) {
     origInput(thiz, ex_ab, ex_ac);
     ImGui_ImplAndroid_HandleInputEvent((AInputEvent *)thiz);
@@ -124,6 +114,9 @@ HOOKAF(void, Input, void *thiz, void *ex_ab, void *ex_ac) {
 }
 
 void SetupImgui() {
+    
+    auto Screen_SetResolution = (void (*)(int, int, bool)) (getAbsoluteAddress(il2cpp_base,il2cpp_base + 0x44A3F00));
+    Screen_SetResolution(screenWidth, screenHeight, true);
     
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -189,7 +182,7 @@ void *hack_thread(void *arg) {
     
     Patches();
     
-    DobbyHook((void *) il2cpp_base + 0x44A3F00, (void *)SetResolutionn, (void **)&_SetResolutionn);
+    // DobbyHook((void *) il2cpp_base + 0x44A3F00, (void *)SetResolutionn, (void **)&_SetResolutionn);
     
     return nullptr;
 }
