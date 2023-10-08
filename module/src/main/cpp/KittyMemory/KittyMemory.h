@@ -164,6 +164,10 @@ namespace KittyMemory {
      */
     ProcMap getLibraryMap(const char *libraryName);
 
+    uintptr_t get_Absolute_Address(uintptr_t relativeAddr) {
+    return (il2cpp_base + relativeAddr);
+    }
+    
     /*
     * Expects a relative address in a library
     * Returns final absolute address
