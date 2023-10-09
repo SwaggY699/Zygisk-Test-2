@@ -23,6 +23,7 @@
 #include "il2cpp-tabledefs.h"
 #include "il2cpp-class.h"
 #include "KittyMemory/MemoryPatch.h"
+#include "KittyMemory/KittyMemory.h"
 
 #define GamePackageName "com.ngame.allstar.eu"
 
@@ -116,7 +117,7 @@ HOOKAF(void, Input, void *thiz, void *ex_ab, void *ex_ac) {
 void SetupImgui() {
     
     auto Screen_SetResolution = (void (*)(int, int, bool)) (get_Absolute_Address(il2cpp_base + 0x44A3F00));
-    Screen_SetResolution(screenWidth, screenHeight, true);
+    Screen_SetResolution(glWidth, glHeight, true);
     
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
