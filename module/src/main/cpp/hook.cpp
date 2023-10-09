@@ -115,7 +115,7 @@ HOOKAF(void, Input, void *thiz, void *ex_ab, void *ex_ac) {
 
 void SetupImgui() {
     
-    auto Screen_SetResolution = (void (*)(int, int, bool)) (KittyMemory::get_Absolute_Address(il2cpp_base + 0x44A3F00));
+    auto Screen_SetResolution = (void (*)(int, int, bool)) (calisoc(il2cpp_base + 0x44A3F00));
     Screen_SetResolution(glWidth, glHeight, true);
     
     IMGUI_CHECKVERSION();
