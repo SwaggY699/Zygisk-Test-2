@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <string>
+
 #include <unistd.h>
 #include <sys/mman.h>
 #include <vector>
@@ -164,7 +165,6 @@ namespace KittyMemory {
      */
     ProcMap getLibraryMap(const char *libraryName);
 
-    uintptr_t calisoc(uintptr_t absolute_address, uintptr_t relativeAddr, bool useCache = false);
     
     /*
     * Expects a relative address in a library
