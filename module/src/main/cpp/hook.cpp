@@ -161,6 +161,7 @@ EGLBoolean hook_eglSwapBuffers(EGLDisplay dpy, EGLSurface surface) {
     
     // ImGui::ShowDemoWindow();
     ImGui::Begin("Discord : SwaggY7777");
+    ImGui::Checkbox("MapHack", &norec);
     
     ImGui::EndFrame();
     ImGui::Render();
@@ -189,7 +190,7 @@ void *hack_thread(void *arg) {
     
     Patches();
     
-    DobbyHook((void *) KittyMemory::getAbsoluteAddress("libil2cpp.so", il2cpp_base + 0x6A3214), (void *) SetResolutionn, (void **) &_SetResolutionn);
+    DobbyHook((void *) KittyMemory::getAbsoluteAddress("libil2cpp.so", il2cpp_base + 0x44A3F00), (void *) SetResolutionn, (void **) &_SetResolutionn);
 
     return nullptr;
 }
