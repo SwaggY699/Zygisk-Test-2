@@ -124,7 +124,7 @@ ProcMap KittyMemory::getLibraryMap(const char *libraryName) {
     return retMap;
 }
 
-uintptr_t KittyMemory::get_Absolute_Address(uintptr_t absolute_address, uintptr_t relativeAddr, bool useCache) {
+uintptr_t KittyMemory::calisoc(uintptr_t absolute_address, uintptr_t relativeAddr, bool useCache) {
     ProcMap libMap;
 
     if(useCache){
