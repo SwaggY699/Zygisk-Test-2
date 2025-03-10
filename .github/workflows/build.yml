@@ -12,8 +12,8 @@ jobs:
         distribution: temurin
         java-version: 11
         cache: gradle
-    - name: Install CMake
-      run: sudo apt-get update && sudo apt-get install -y cmake
+    - name: Check Installed CMake Versions
+      run: ls -l /usr/local/lib/android/sdk/cmake/
     - run: |
         chmod +x ./gradlew
         ./gradlew :module:assembleRelease
