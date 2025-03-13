@@ -95,13 +95,14 @@ void  il2cpp_api_init(void *handle) {
 const char* nop = "1F2003D5";
 const char* fal = "000080D2C0035FD6";
 const char* tru = "200080D2C0035FD6";
+const char* mah = "0660A0E3";
 
 struct GlobalPatches {
     MemoryPatch mh1;
 }gPatches;
 ////////////////////////////////////////////////////////////////////////////////////
 void Patches(){
-    gPatches.mh1 = MemoryPatch::createWithHex(il2cpp_base + 0x1F7C014, fal);
+    gPatches.mh1 = MemoryPatch::createWithHex(il2cpp_base + 0x215DF2C, mah);
 }
 ////////////////////////////////////////////////////////////////////////////////////
 int glHeight, glWidth;
@@ -265,7 +266,7 @@ void *hack_thread(void *arg) {
     
     Patches();
     
-    DobbyHook((void *) KittyMemory::getAbsoluteAddress("libil2cpp.so", il2cpp_base + 0x44A3F00), (void *) SetResolutionn, (void **) &_SetResolutionn);
+    DobbyHook((void *) KittyMemory::getAbsoluteAddress("libil2cpp.so", il2cpp_base + 0x48A142C), (void *) SetResolutionn, (void **) &_SetResolutionn);
 
     return nullptr;
 }
