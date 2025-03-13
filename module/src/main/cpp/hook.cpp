@@ -24,7 +24,7 @@
 #include "il2cpp-class.h"
 #include "KittyMemory/MemoryPatch.h"
 
-#define GamePackageName "com.ngame.allstar.eu"
+#define GamePackageName "com.mobile.legends"
 
 int isGame(JNIEnv *env, jstring appDataDir) {
     if (!appDataDir)
