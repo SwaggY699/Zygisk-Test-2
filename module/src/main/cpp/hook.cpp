@@ -24,7 +24,7 @@
 #include "il2cpp-class.h"
 #include "KittyMemory/MemoryPatch.h"
 
-#define GamePackageName "com.mobile.legends"
+#define GamePackageName "com.criticalforceentertainment.criticalops"
 
 int isGame(JNIEnv *env, jstring appDataDir) {
     if (!appDataDir)
@@ -113,7 +113,7 @@ HOOKAF(void, Input, void *thiz, void *ex_ab, void *ex_ac) {
     ImGui_ImplAndroid_HandleInputEvent((AInputEvent *)thiz);
     return;
 }
-
+/*
 bool SetCustomResolution = true;
 void (*_SetResolutionn)(...);
 void SetResolutionn(int width, int height, bool fullscreen){
@@ -123,6 +123,7 @@ if(SetCustomResolution){
 }
 _SetResolutionn(width, height, fullscreen);
 }
+*/
 ///////////
 bool HandleInputEvent(JNIEnv *env, int motionEvent, int x, int y, int p);
 
@@ -266,7 +267,7 @@ void *hack_thread(void *arg) {
     
     Patches();
     
-    DobbyHook((void *) KittyMemory::getAbsoluteAddress("libil2cpp.so", il2cpp_base + 0x48A142C), (void *) SetResolutionn, (void **) &_SetResolutionn);
+    //DobbyHook((void *) KittyMemory::getAbsoluteAddress("libil2cpp.so", il2cpp_base + 0x48A142C), (void *) SetResolutionn, (void **) &_SetResolutionn);
 
     return nullptr;
 }
